@@ -1,0 +1,2 @@
+include setup.py
+include lounge/__init__.py
