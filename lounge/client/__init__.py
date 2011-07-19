@@ -12,8 +12,11 @@
 #See the License for the specific language governing permissions and
 #limitations under the License.
 
-import cjson
 import copy
+try:
+	import json
+except ImportError:
+	import simplejson as json
 import httplib2
 import logging
 import os
@@ -22,7 +25,6 @@ import socket
 import StringIO
 import urllib
 
-from cjson import DecodeError
 from UserDict import DictMixin
 
 db_config = {
@@ -197,7 +199,7 @@ class Resource(object, DictMixin):
 		
 		Returns content-type, body pair.
 		"""
-		return "application/json", cjson.encode(payload)
+		return "application/json", json.dumps(payload)
 	
 	def _decode(self, payload, headers):
 		"""Decode a response.
@@ -205,9 +207,9 @@ class Resource(object, DictMixin):
 		For typical Couch stuff, we parse as JSON.  Override as needed.
 		"""
 		try:
-			return cjson.decode(payload)
-		except DecodeError:
-			raise DecodeError(payload)
+			return json.loads(payload)
+		except ValueError:
+			raise ValueError(payload)
 	
 	### REST helpers
 	def _request(self, method, url, args=None, body=None):
@@ -621,7 +623,7 @@ class View(Resource):
 				#	startkey=["one", "two"] is json-encoded.
 				if k!='stale':
 					# json-encode the args
-					args[k] = cjson.encode(v)
+					args[k] = json.dumps(v)
 		#this sets the post-body to the arguments of the view (so it's actually not a no-op)
 		#this behaviour is used in TempView below
 		inst._rec = kwargs

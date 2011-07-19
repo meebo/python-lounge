@@ -1,5 +1,8 @@
 import re
-import cjson
+try:
+	import json
+except ImportError:
+	import simplejson as json
 
 class ShardMap(object):
 	def __init__(self, fname=None):
@@ -10,7 +13,7 @@ class ShardMap(object):
 				r'^shards%2[fF]([\da-fA-F]{8})-([\da-fA-F]{8})%2[fF](.+)$')
 	
 	def load_config(self, fname):
-		self.config = cjson.decode(file(fname).read())
+		self.config = json.load(file(fname))
 		self.shardmap = self.config["shard_map"]
 		self.nodelist = self.config["nodes"]
 		self.dupsets = self.config.get("dup_shards", [])
