@@ -1,8 +1,8 @@
 import re
 try:
-	import json
-except ImportError:
 	import simplejson as json
+except ImportError:
+	import json
 
 class ShardMap(object):
 	def __init__(self, fname=None):

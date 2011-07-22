@@ -14,9 +14,9 @@
 
 import copy
 try:
-	import json
-except ImportError:
 	import simplejson as json
+except ImportError:
+	import json
 import httplib2
 import logging
 import os
