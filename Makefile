@@ -1,5 +1,5 @@
 # build number, increment with each new build, reset on new version
-RELEASE = 2.`rpm --eval "%{?dist}"`
+RELEASE = 2`rpm --eval "%{?dist}"`
 
 PY_VERSION := $(shell python -V 2>&1)
 ifeq ($(strip $(DESTDIR)),)
