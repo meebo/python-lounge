@@ -1,5 +1,11 @@
 # build number, increment with each new build, reset on new version
-RELEASE = 2`rpm --eval "%{?dist}"`
+DIST := $(shell rpm --eval "%{?dist}")
+RELEASE := 1
+ifeq ($(DIST),el5)
+	REQUIRES = python-httplib2, python-simplejson
+else
+	REQUIRES = python-httplib2
+endif
 
 PY_VERSION := $(shell python -V 2>&1)
 ifeq ($(strip $(DESTDIR)),)
@@ -17,7 +23,8 @@ install:
 	python setup.py install $(root)
 
 rpm:
-	python setup.py bdist_rpm --release="$(RELEASE)"
+	python setup.py bdist_rpm --release="$(RELEASE)$(DIST)" \
+		--requires "$(REQUIRES)"
 
 .PHONY: test
 test:
