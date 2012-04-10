@@ -407,6 +407,14 @@ class Database(Resource):
 		# key is database new; url is couch url/database
 		return get_db_connectinfo(self) + self._key
 
+	def _put(self, args=None):
+		# We override _put because we don't want to send any content in
+		# the HTTP request for creating a database because couchdb fails
+		# to respect the content-length header and will send us a TCP
+		# RST if the body of our request arrives later than the headers.
+		# See https://issues.apache.org/jira/browse/COUCHDB-1146
+		return self._request('PUT', self.url(), args=args)
+
 class Document(Resource):
 	"""Base class for a lounge record.
 
