@@ -226,6 +226,8 @@ class Resource(object, DictMixin):
 		if body is not None:
 			content_type, body = self._encode(body)
 			headers = {'Content-Type': content_type, 'Content-Length': str(len(body))}
+		else:
+			headers = {'Content-Length': '0'}
 
 		reason = None
 		try:
