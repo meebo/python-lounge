@@ -97,7 +97,9 @@ class LoungeError(Exception):
 	@classmethod
 	def make(cls, code, key='', reason=None):
 		"""Make an exception from an HTTP error code."""
-		if code == 404:
+		if code == 400:
+			return ResourceTemporarilyUnavailable(code, key, reason)
+		elif code == 404:
 			return NotFound(code, key, reason)
 		elif code == 408:
 			return RequestTimedOut(code, key, reason)
@@ -106,6 +108,10 @@ class LoungeError(Exception):
 		elif code == 504:
 			return ProxyTimedOut(code, key, reason)
 		return cls(code, key, reason)
+
+class ResourceTemporarilyUnavailable(LoungeError):
+	"""Exception for when CouchDB is super busy."""
+	pass
 
 class NotFound(LoungeError):
 	"""Exception for when you read or update a missing record."""
